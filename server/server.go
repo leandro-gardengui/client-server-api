@@ -26,7 +26,7 @@ type CotacaoDolarResponse struct {
 		Ask        string `json:"ask"`
 		Timestamp  string `json:"timestamp"`
 		CreateDate string `json:"create_date"`
-	}
+	} `json:"USDBRL"`
 }
 
 // Struct to store the model of the database

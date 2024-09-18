@@ -5,21 +5,27 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
 type CurrentDollar struct {
-	ValueUSD string `json:"bid"`
+	USDBRL struct {
+		Bid string `json:"bid"`
+	} `json:"USDBRL"`
 }
 
 func main() {
 	currentDollarValue, err := getCurrentDollarValue()
 	if err != nil {
-		// handle error
+		log.Println(err.Error())
 		return
 	}
-	// use currentDollarValue
-	log.Println(currentDollarValue)
+	error := saveResultInFile(currentDollarValue)
+	if error != nil {
+		log.Println(error.Error())
+		return
+	}
 }
 
 func getCurrentDollarValue() (*CurrentDollar, error) {
@@ -41,4 +47,17 @@ func getCurrentDollarValue() (*CurrentDollar, error) {
 		return nil, error
 	}
 	return &currentDollar, nil
+}
+
+func saveResultInFile(currentDollar *CurrentDollar) error {
+	file, error := os.Create("cotacao.txt")
+	if error != nil {
+		return error
+	}
+	defer file.Close()
+	_, error = file.WriteString("Dólar: " + currentDollar.USDBRL.Bid)
+	if error != nil {
+		return error
+	}
+	return nil
 }
